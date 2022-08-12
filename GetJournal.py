@@ -10,7 +10,7 @@ browser = webdriver.Chrome()
 browser.get("https://kns.cnki.net/kns8/AdvSearch")
 
 journalInput=browser.find_element("xpath",'//*[@id="gradetxt"]/dd[3]/div[2]/input')
-journalInput.send_keys("安徽大学学报(哲学社会科学版)")
+journalInput.send_keys("安徽史学")
 searchKey=browser.find_element("xpath",'/html/body/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div[2]/input')
 searchKey.click()
 time.sleep(25)
@@ -25,4 +25,4 @@ while df.loc[df.__len__(),5]>'2015-01-01':
     nextPage=browser.find_element("xpath",'//*[@id="PageNext"]').click()
     time.sleep(25)
 
-df.to_csv("./paper.csv",encoding='utf-8-sig')
+df.to_csv("./paper1.csv",encoding='utf-8-sig')
