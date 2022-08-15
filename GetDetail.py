@@ -8,10 +8,11 @@ from selenium import webdriver
 
 browser = webdriver.Chrome()
 
-paper=pd.read_csv("./paper.csv",names=range(0,14))
+paper=pd.read_csv("./paper1.csv",names=range(0,14),header=None)
 
 def parse(text):
     resultList=re.findall(r"FileName=(.*?)&DbName=(.*?)&DbCode=(.*?)&",text)
+
     return "https://kns.cnki.net/kcms/detail/detail.aspx?dbcode="+resultList[0][2]+"&dbname="+resultList[0][1]+"&filename="+resultList[0][0]
 
 
@@ -19,7 +20,7 @@ def get_latest_row(df):
     if 10 in df.columns or '10' in df.columns:
         selector=10 if 10 in df.columns else '10'
         auxiliary=9 if 9 in df.columns else '9'
-        for i in range(0,df.__len__()):
+        for i in range(1,df.__len__()):
             if pd.isna(df.loc[i,selector]) and not pd.isna(df.loc[i,auxiliary]):
                 return i
         return df.__len__()
@@ -53,6 +54,6 @@ try:
         time.sleep(8)
 except:
         traceback.print_exc()
-        paper.to_csv('paper.csv',encoding='utf-8-sig',header=None,index=None)
-paper.to_csv('paper.csv',encoding='utf-8-sig',header=None,index=None)
+        paper.to_csv('paper1.csv',encoding='utf-8-sig',header=None,index=None)
+paper.to_csv('paper1.csv',encoding='utf-8-sig',header=None,index=None)
 

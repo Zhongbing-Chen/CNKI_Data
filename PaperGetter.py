@@ -3,13 +3,12 @@ import time
 import selenium
 import pandas as pd
 import re
+import requests
 from selenium import webdriver
 
 browser = webdriver.Chrome()
 
 browser.get("https://kns.cnki.net/kns8/AdvSearch")
-target=pd.read_excel("CSSCI期刊.XLSX")
-
 
 journalInput=browser.find_element("xpath",'//*[@id="gradetxt"]/dd[3]/div[2]/input')
 journalInput.send_keys("安徽史学")
@@ -28,3 +27,13 @@ while df.loc[df.__len__(),5]>'2015-01-01':
     time.sleep(25)
 
 df.to_csv("./paper2.csv",encoding='utf-8-sig')
+
+class PaperGetter:
+    def __init__(self,browser):
+        self.browser=browser
+
+    def search_with_key(self,key):
+        journalInput = browser.find_element("xpath", '//*[@id="gradetxt"]/dd[3]/div[2]/input')
+        journalInput.send_keys(key)
+        searchKey = browser.find_element("xpath", '/html/body/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div[2]/input')
+        searchKey.click()
