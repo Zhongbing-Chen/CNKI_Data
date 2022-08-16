@@ -1,10 +1,14 @@
 import subprocess
 import time
 
-filename = 'GetDetail.py'
+filename = 'GridTableGetter.py'
 while True:
     """However, you should be careful with the '.wait()'"""
     p = subprocess.Popen('python '+filename, shell=True).wait()
 
-    """This is a program that will restart automatically GetDetail.py if it finds this program is killed due to some unknown reasons"""
-    time.sleep(200)
+    """This is a program that will restart automatically GridTableGetter.py if it finds this program is killed due to some unknown reasons"""
+    if p!=0:
+        time.sleep(120)
+        continue
+    else:
+        break
