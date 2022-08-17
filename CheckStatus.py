@@ -8,7 +8,7 @@ while True:
 
     """This is a program that will restart automatically GridTableGetter.py if it finds this program is killed due to some unknown reasons"""
     if p!=0:
-        time.sleep(120)
+        time.sleep(60)
         continue
     else:
         break
