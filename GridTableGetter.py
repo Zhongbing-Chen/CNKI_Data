@@ -6,6 +6,7 @@ import selenium
 import pandas as pd
 import re
 
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +15,8 @@ import ddddocr
 from ddddocr import DdddOcr
 
 target=pd.read_excel('CSSCI期刊.XLSX')
-
+chrome_options = Options()
+chrome_options.add_argument("--headless")
 
 browser = webdriver.Chrome()
 
@@ -23,7 +25,7 @@ class GridTableGetter:
     def __init__(self,target,pages=1):
         self.browser=browser
         self.pages=pages
-        self.advSearch="https://kns.cnki.net/kns8/AdvSearch"
+        self.advSearch="http://kns.cnki.net/kns8/AdvSearch"
         self.journalInputElement='//*[@id="gradetxt"]/dd[3]/div[2]/input'
         self.searchKeyElement='/html/body/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div[2]/input'
         self.result=pd.read_csv('paper_all.csv',names=range(1,10))
@@ -47,7 +49,7 @@ class GridTableGetter:
         time.sleep(1)
 
         self.searchKey.click()
-        time.sleep(5)
+        time.sleep(2)
         self.nextPage=browser.find_element("xpath", '//*[@id="PageNext"]')
 
         if self.pages>1:
@@ -56,12 +58,14 @@ class GridTableGetter:
         else:
             self.scrapy()
     def scrapy(self):
-        while sum(self.result.loc[self.result.__len__()-1,:].isnull() == True)>4 \
+        while (sum(self.result.loc[self.result.__len__()-1,:].isnull() == True)>4 \
                 or self.result.__len__()==0 \
                 or self.result.loc[self.result.__len__()-1, 5] > '2015-01-01' \
-                or gridTableGetter.result.loc[self.result.__len__()-1,4]!=self.target:
-            time.sleep(1)
+                or gridTableGetter.result.loc[self.result.__len__()-1,4]!=self.target):
+                # and not self.result.loc[self.result.__len__()-1, 5] < '2015-01-01':
+            time.sleep(0.5)
             self.verify()
+            time.sleep(0.5)
             for i in range(1, 21):
                 row = self.result.__len__() + 1
                 for j in range(1, 9):
@@ -74,6 +78,7 @@ class GridTableGetter:
 
             # nextPage = browser.find_element("xpath", '//*[@id="PageNext"]')
             # nextPage.click()
+            time.sleep(0.5)
             WebDriverWait(browser, 20).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="PageNext"]'))).click()
 
@@ -86,7 +91,7 @@ class GridTableGetter:
             if len(self.browser.find_elements('xpath', '//*[@id="changeVercode"]')) > 0:
 
                 self.verification_code = self.browser.find_element('xpath', '//*[@id="changeVercode"]')
-                time.sleep(1)
+                time.sleep(0.5)
                 self.verification_code_text = self.ocr.classification(self.verification_code.screenshot_as_png)
                 code_input_box = self.browser.find_element('xpath', '//*[@id="vericode"]')
                 code_input_box.clear()
@@ -94,9 +99,9 @@ class GridTableGetter:
                 enter_button = self.browser.find_element('xpath', '//*[@id="checkCodeBtn"]')
                 enter_button.click()
                 print("The verification code is "+self.verification_code_text)
-                time.sleep(15)
+                time.sleep(5)
             else:
-                time.sleep(1)
+                time.sleep(0.1)
                 break
 
 
