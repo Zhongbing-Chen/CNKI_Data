@@ -57,6 +57,7 @@ class GridTableGetter:
             self.scrapy()
         else:
             self.scrapy()
+    # TODO settle down the problem like out of index due to page number
     def scrapy(self):
         while (sum(self.result.loc[self.result.__len__()-1,:].isnull() == True)>4 \
                 or self.result.__len__()==0 \
@@ -123,7 +124,7 @@ try:
 except:
 
     target.loc[items,'Pages']=gridTableGetter.pages
-    gridTableGetter.result.to_csv('paper_all.csv', header=None,index=None)
+    gridTableGetter.result.to_csv('paper_all.csv', header=None,index=None,encoding='utf-8-sig')
     target.to_excel('CSSCI期刊.xlsx', index=None)
     traceback.print_exc()
     raise Exception("Restart")
